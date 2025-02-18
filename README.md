@@ -1,0 +1,1 @@
+# 22f_flask_class_manager
