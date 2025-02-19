@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DAFIKANAF</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-lg">
+      <div class="container">
+        <a class="navbar-brand fw-bold" href="#">DAFIKANAF</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto d-flex align-items-center justify-content-end">
+            {% if 'loggedin' in session %}
+            <li class="nav-item">
+              <a href="{{ url_for('logout') }}" class="btn btn-outline-danger px-4 py-2 rounded-pill fw-bold"> <i class="fas fa-sign-out-alt"></i> Logout </a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+              <a href="{{ url_for('login') }}" class="btn btn-outline-primary px-4 py-2 rounded-pill fw-bold"> <i class="fas fa-sign-in-alt"></i> Login </a>
+            </li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Tambahkan FontAwesome untuk ikon -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+    <div class="container-fluid">
+      <h1 class="text-center alert alert-danger">Class Manager App</h1>
+      <div class="row">
+        <div class="col-sm-2"></div>
+
+        <!-- content goes here -->
+        <div class="col-sm-8">
+          <h2>
+            Student List
+            <button class="btn btn-primary float-right" data-toggle="modal" data-target="#myModal">Add Student</button>
+          </h2>
+
+          <!-- Input Search dengan Ikon -->
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fas fa-search"></i></span>
+            </div>
+            <input type="text" id="searchStudent" class="form-control" placeholder="Search student..." />
+          </div>
+
+          <script>
+            document.getElementById("searchStudent").addEventListener("keyup", function () {
+              let filter = this.value.toLowerCase();
+              let rows = document.querySelectorAll("#studentTable tr");
+
+              rows.forEach((row) => {
+                let text = row.innerText.toLowerCase();
+                if (text.includes(filter)) {
+                  row.style.display = "";
+                } else {
+                  row.style.display = "none";
+                }
+              });
+            });
+          </script>
+          <!-- Add Student Modal -->
+          <div id="myModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title text-primary">Please Add New Student</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <form action="{{ url_for('insert')}}" method="POST">
+                    <div class="form-group">
+                      <label>Full Name</label>
+                      <input type="text" name="name" class="form-control" placeholder="Enter Full Name" required />
+                    </div>
+                    <div class="form-group">
+                      <label>Email</label>
+                      <input type="email" name="email" class="form-control" placeholder="Enter Email" required />
+                    </div>
+                    <div class="form-group">
+                      <label>Phone Number</label>
+                      <input name="phone" type="text" class="form-control" placeholder="Enter Phone Number" required />
+                    </div>
+                    <button type="submit" class="btn btn-primary mb-2">Save</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>S/N</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="studentTable">
+              {% for row in students %}
+              <tr>
+                <td>{{row.0}}</td>
+                <td>{{row.1}}</td>
+                <td>{{row.2}}</td>
+                <td>{{row.3}}</td>
+                <td>
+                  <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modaledit{{row.0}}">Edit</button>
+                  <a href="/delete/{{ row.0 }}" onclick="return confirm('Are Sure Want To Delete?')" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+              </tr>
+              <!-- Edit Student Modal -->
+              <div id="modaledit{{ row.0 }}" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title text-primary">Edit Student</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <form action="{{ url_for('update') }}" method="POST">
+                        <input type="hidden" name="id" value="{{ row.0 }}" />
+
+                        <div class="form-group">
+                          <label>Full Name</label>
+                          <input type="text" name="name" class="form-control" value="{{ row.1 }}" required />
+                        </div>
+                        <div class="form-group">
+                          <label>Email</label>
+                          <input type="email" name="email" class="form-control" value="{{ row.2 }}" required />
+                        </div>
+                        <div class="form-group">
+                          <label>Phone Number</label>
+                          <input type="text" name="phone" class="form-control" value="{{ row.3 }}" required />
+                        </div>
+
+                        <button type="submit" class="btn btn-success mb-2">Update</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="col-sm-2"></div>
+      </div>
+
+      <!-- Footer -->
+      <footer class="bg-dark text-white text-center py-3 mt-4 shadow-lg">
+        <div class="container">
+          <p class="mb-0">&copy; 2025 DAFIKANAF. All Rights Reserved.</p>
+        </div>
+      </footer>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

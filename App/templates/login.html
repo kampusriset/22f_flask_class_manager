@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login | TechSky</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+      body {
+        background: linear-gradient(to right, #4a90e2, #9013fe);
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .login-container {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+        max-width: 400px;
+        width: 100%;
+      }
+      .login-title {
+        font-weight: bold;
+        text-align: center;
+      }
+      .form-control {
+        border-radius: 50px;
+      }
+      .btn-login {
+        width: 100%;
+        border-radius: 50px;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-container">
+      <h2 class="login-title">Welcome Back</h2>
+      <p class="text-center text-muted">Please login to your account</p>
+
+      <form method="POST">
+        <div class="mb-3">
+          <label class="form-label"><i class="fas fa-user"></i> Username</label>
+          <input type="text" name="username" class="form-control" placeholder="Enter your username" required />
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label"><i class="fas fa-lock"></i> Password</label>
+          <input type="password" name="password" class="form-control" placeholder="Enter your password" required />
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-login">Login</button>
+      </form>
+
+      <p class="text-center mt-3">
+        Belum punya akun?
+        <a href="{{ url_for('register') }}" class="text-primary">Register</a>
+      </p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
